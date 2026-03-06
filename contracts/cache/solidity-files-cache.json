@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Lenovo\\Blockchain-Hackathon\\contracts\\contracts\\ProvenanceTracker.sol": {
+      "lastModificationDate": 1772514604214,
+      "contentHash": "2586b908ceade5ac0d6a0d07440a4956",
+      "sourceName": "contracts/ProvenanceTracker.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "ProvenanceTracker"
+      ]
+    }
+  }
+}
