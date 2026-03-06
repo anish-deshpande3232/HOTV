@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ProvenanceChain — Blockchain Supply Chain Transparency</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    ProvenanceChain
+  </div>
+  <div class="nav-links">
+    <a href="#how" class="nav-link">How It Works</a>
+    <a href="#roles" class="nav-link">Roles</a>
+    <a href="verify.html" class="nav-link">Verify</a>
+    <a href="login.html" class="btn btn-outline" style="margin-left:8px;padding:8px 20px;font-size:14px">Login</a>
+    <a href="verify.html" class="btn btn-primary" style="margin-left:6px;padding:8px 20px;font-size:14px">🔍 Verify</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="fade-up">
+      <div class="hero-tag"><div class="hero-tag-dot"></div> Blockchain-Powered Provenance</div>
+      <h1 class="hero-h">Farm-to-Fork <span class="grad-text">Transparency</span> Powered by Blockchain</h1>
+      <p class="hero-p">Verify product origin, safety, and authenticity instantly. Every step of your supply chain — immutably recorded on-chain.</p>
+      <div class="hero-cta">
+        <a href="verify.html" class="btn btn-primary btn-lg">🔍 Verify Product</a>
+        <a href="login.html" class="btn btn-outline btn-lg">🔐 Login Portal</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-val grad-text">12,400+</div><div class="hero-stat-lbl">Batches Tracked</div></div>
+        <div><div class="hero-stat-val grad-text">340+</div><div class="hero-stat-lbl">Farms Onboarded</div></div>
+        <div><div class="hero-stat-val grad-text">98.2%</div><div class="hero-stat-lbl">Approval Rate</div></div>
+        <div><div class="hero-stat-val grad-text">0</div><div class="hero-stat-lbl">Tampered Records</div></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end">
+      <div class="hero-card float">
+        <div style="font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Live Batch Tracker</div>
+        <div class="hero-step"><div class="hero-step-ic">🌾</div><div><div class="hero-step-name">Harvest Recorded</div><div class="hero-step-time">Punjab, India · 2h ago</div></div><span class="badge badge-green" style="margin-left:auto;font-size:9px">✓</span></div>
+        <div class="hero-step"><div class="hero-step-ic">🏢</div><div><div class="hero-step-name">Custody Accepted</div><div class="hero-step-time">AgroFresh Ltd · 1h ago</div></div><span class="badge badge-green" style="margin-left:auto;font-size:9px">✓</span></div>
+        <div class="hero-step"><div class="hero-step-ic">🧪</div><div><div class="hero-step-name">Lab Testing</div><div class="hero-step-time">BioTest Labs · In progress</div></div><span class="badge badge-amber" style="margin-left:auto;font-size:9px">⏳</span></div>
+        <div class="hero-step" style="opacity:.45"><div class="hero-step-ic">📦</div><div><div class="hero-step-name">Consumer Delivery</div><div class="hero-step-time">Awaiting approval</div></div><span class="badge badge-gray" style="margin-left:auto;font-size:9px">—</span></div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+          <div class="flex f-between mb-8"><span class="text-xs text-muted">Overall Progress</span><span class="text-xs fw-700 text-green">60%</span></div>
+          <div class="prog-wrap"><div class="prog-fill" style="width:60%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="section section-alt" id="industries">
+  <div class="max-w">
+    <div class="sec-center">
+      <div class="sec-eyebrow">🏭 Industries</div>
+      <h2 class="sec-h">Choose Your Industry</h2>
+      <p class="sec-p">ProvenanceChain adapts to your industry — customising fields and workflows for each supply chain type.</p>
+    </div>
+    <div class="industry-grid stagger">
+      <div class="industry-card" onclick="selectIndustry(this,'agri')">
+        <div class="industry-check">✓</div>
+        <div class="ind-icon">🌾</div>
+        <div class="ind-title">Agriculture & Food</div>
+        <div class="ind-desc">Moisture, pesticide levels, harvest date, GI tags, FSSAI certification — everything tracked from farm to fork.</div>
+      </div>
+      <div class="industry-card" onclick="selectIndustry(this,'pharma')">
+        <div class="industry-check">✓</div>
+        <div class="ind-icon">💊</div>
+        <div class="ind-title">Pharmaceuticals</div>
+        <div class="ind-desc">Dosage verification, manufacturing license, DCGI certification, cold chain monitoring and GMP compliance.</div>
+      </div>
+      <div class="industry-card" onclick="selectIndustry(this,'health')">
+        <div class="industry-check">✓</div>
+        <div class="ind-icon">🏥</div>
+        <div class="ind-title">Healthcare Supplies</div>
+        <div class="ind-desc">Medical device traceability, sterility checks, ISO certification and hospital supply chain management.</div>
+      </div>
+      <div class="industry-card" onclick="selectIndustry(this,'organic')">
+        <div class="industry-check">✓</div>
+        <div class="ind-icon">🍃</div>
+        <div class="ind-title">Organic Products</div>
+        <div class="ind-desc">Organic certification, no synthetic input verification, soil health records and eco-label management.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="max-w">
+    <div class="sec-center">
+      <div class="sec-eyebrow">⚡ Process</div>
+      <h2 class="sec-h">How It Works</h2>
+      <p class="sec-p">Four simple steps from farm to consumer — every action immutably recorded on the blockchain.</p>
+    </div>
+    <div class="steps-grid stagger">
+      <div class="step-card">
+        <div class="step-num">🌱</div>
+        <div class="step-title">Farmer Creates Batch</div>
+        <div class="step-desc">Producer records harvest details, uploads photos and certifications. Metadata pinned to IPFS, batch ID minted on-chain.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">🏢</div>
+        <div class="step-title">Company Processes</div>
+        <div class="step-desc">Company accepts custody, verifies batch details and sends to certified lab for quality testing. All custody transfers recorded.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">🧪</div>
+        <div class="step-title">Lab Tests & Signs</div>
+        <div class="step-desc">Certified lab performs tests, uploads signed report to IPFS and submits results on-chain. Digital signature ensures authenticity.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">📱</div>
+        <div class="step-title">Consumer Verifies</div>
+        <div class="step-desc">Consumer scans QR code or enters batch ID to instantly verify origin, lab results, certifications and full supply chain history.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section class="section section-alt" id="roles">
+  <div class="max-w">
+    <div class="sec-center">
+      <div class="sec-eyebrow">👥 Roles</div>
+      <h2 class="sec-h">Who Is It For?</h2>
+      <p class="sec-p">Every participant in the supply chain has a dedicated portal tailored to their workflow.</p>
+    </div>
+    <div class="roles-grid stagger">
+      <a href="login.html" class="role-card" onclick="localStorage.setItem('role','farmer')">
+        <div class="role-ic" style="background:rgba(0,230,118,.12)">🌾</div>
+        <div class="role-name">Farmers</div>
+        <div class="role-desc">Create batches, upload certifications, track approvals and monitor lab status</div>
+        <div class="role-arrow">→</div>
+      </a>
+      <a href="login.html" class="role-card" onclick="localStorage.setItem('role','company')">
+        <div class="role-ic" style="background:rgba(0,180,255,.12)">🏢</div>
+        <div class="role-name">Companies</div>
+        <div class="role-desc">Manage incoming batches, send to lab, generate QR codes and handle recalls</div>
+        <div class="role-arrow">→</div>
+      </a>
+      <a href="login.html" class="role-card" onclick="localStorage.setItem('role','lab')">
+        <div class="role-ic" style="background:rgba(168,85,247,.12)">🧪</div>
+        <div class="role-name">Labs</div>
+        <div class="role-desc">Run pending tests, upload digitally-signed reports and submit results on-chain</div>
+        <div class="role-arrow">→</div>
+      </a>
+      <a href="verify.html" class="role-card">
+        <div class="role-ic" style="background:rgba(245,158,11,.12)">🛍</div>
+        <div class="role-name">Consumers</div>
+        <div class="role-desc">Scan QR or enter batch ID — verify origin, safety and full journey instantly</div>
+        <div class="role-arrow">→</div>
+      </a>
+      <a href="login.html" class="role-card" onclick="localStorage.setItem('role','admin')">
+        <div class="role-ic" style="background:rgba(239,68,68,.12)">🛡</div>
+        <div class="role-name">Admins</div>
+        <div class="role-desc">Approve users, monitor all batches, view analytics and manage the platform</div>
+        <div class="role-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="flex f-center gap-12" style="justify-content:center;margin-bottom:10px">
+    <div class="nav-logo-icon" style="width:28px;height:28px;font-size:13px">🌿</div>
+    <span class="fw-700">ProvenanceChain</span>
+  </div>
+  <div>Blockchain-powered supply chain transparency · Built with Solidity, MongoDB & IPFS</div>
+  <div style="margin-top:6px;font-size:11px">Hardhat Testnet · Polygon Mumbai Compatible</div>
+</footer>
+
+<div id="toast-wrap"></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script>
+function selectIndustry(el, type) {
+  document.querySelectorAll(".industry-card").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  showToast("Industry set to " + el.querySelector(".ind-title").textContent, "info", 2500);
+}
+checkBackend();
+</script>
+</body>
+</html>

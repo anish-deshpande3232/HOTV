@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login — ProvenanceChain</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="login-pg">
+  <div class="login-box fade-up">
+    <div class="login-logo-ic">🌿</div>
+    <h1 class="login-title">ProvenanceChain</h1>
+    <p class="login-sub">Select your role to continue into your dashboard</p>
+
+    <div id="backend-status" style="text-align:center;margin-bottom:16px"></div>
+
+    <div class="form-label" style="text-align:center;margin-bottom:12px">LOGIN AS</div>
+    <div class="role-options" id="role-options">
+      <div class="role-opt" onclick="selectRole('farmer',this)">
+        <div class="role-opt-icon">🌾</div>
+        <div class="role-opt-name">Farmer</div>
+      </div>
+      <div class="role-opt" onclick="selectRole('company',this)">
+        <div class="role-opt-icon">🏢</div>
+        <div class="role-opt-name">Company</div>
+      </div>
+      <div class="role-opt" onclick="selectRole('lab',this)">
+        <div class="role-opt-icon">🧪</div>
+        <div class="role-opt-name">Lab</div>
+      </div>
+      <div class="role-opt" onclick="selectRole('admin',this)">
+        <div class="role-opt-icon">🛡</div>
+        <div class="role-opt-name">Admin</div>
+      </div>
+    </div>
+
+    <div id="selected-info" class="alert alert-info hidden" style="margin-bottom:16px">
+      <span class="alert-icon" id="sel-icon">👤</span>
+      <span class="alert-text">Logging in as <strong id="sel-name">—</strong> &nbsp;·&nbsp; <span id="sel-demo" style="font-size:11px;color:var(--dim)"></span></span>
+    </div>
+
+    <button id="enter-btn" class="btn btn-primary btn-full" onclick="doLogin()" disabled>
+      Enter Dashboard →
+    </button>
+
+    <div class="divider"></div>
+    <div style="text-align:center">
+      <a href="verify.html" style="color:var(--muted);font-size:13px">🔍 Verify a product without login</a>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <a href="index.html" style="color:var(--dim);font-size:12px">← Back to home</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let _selectedRole = null;
+const demoMap = {
+  farmer:  { icon:"🌾", name:"Rajesh Kumar", hint:"Demo: Organic Wheat Farmer, Punjab" },
+  company: { icon:"🏢", name:"AgroFresh Ltd.", hint:"Demo: Company processing batches" },
+  lab:     { icon:"🧪", name:"BioTest Labs", hint:"Demo: Certified testing laboratory" },
+  admin:   { icon:"🛡", name:"Platform Admin", hint:"Demo: Full platform access" }
+};
+
+function selectRole(role, el) {
+  _selectedRole = role;
+  document.querySelectorAll(".role-opt").forEach(r => r.classList.remove("selected"));
+  el.classList.add("selected");
+  const d = demoMap[role];
+  document.getElementById("sel-icon").textContent = d.icon;
+  document.getElementById("sel-name").textContent = d.name;
+  document.getElementById("sel-demo").textContent  = d.hint;
+  document.getElementById("selected-info").classList.remove("hidden");
+  document.getElementById("enter-btn").disabled = false;
+  document.getElementById("enter-btn").textContent = `Enter ${role.charAt(0).toUpperCase()+role.slice(1)} Dashboard →`;
+}
+
+function doLogin() {
+  if (!_selectedRole) return;
+  const d = demoMap[_selectedRole];
+  localStorage.setItem("userName", d.name);
+  login(_selectedRole);
+}
+
+checkBackend();
+
+// Auto-fill role if came from home page card click
+const preRole = localStorage.getItem("role");
+if (preRole && demoMap[preRole]) {
+  const opt = document.querySelectorAll(".role-opt");
+  const idx = ["farmer","company","lab","admin"].indexOf(preRole);
+  if (idx >= 0 && opt[idx]) selectRole(preRole, opt[idx]);
+}
+</script>
+</body>
+</html>

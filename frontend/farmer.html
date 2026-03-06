@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Farmer Dashboard — ProvenanceChain</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🌿</div>
+      <div><div class="sidebar-brand">ProvenanceChain</div><div class="sidebar-brand-sub">Farmer Portal</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item active" data-sec="dashboard" onclick="showSection('dashboard')"><span class="nav-item-icon">📊</span>Dashboard</button>
+      <button class="nav-item" data-sec="create" onclick="showSection('create')"><span class="nav-item-icon">🌱</span>Create Batch</button>
+      <button class="nav-item" data-sec="history" onclick="showSection('history')"><span class="nav-item-icon">📋</span>Batch History</button>
+      <div class="nav-section-label">Tracking</div>
+      <button class="nav-item" data-sec="lab" onclick="showSection('lab')"><span class="nav-item-icon">🧪</span>Lab Status</button>
+      <button class="nav-item" data-sec="certs" onclick="showSection('certs')"><span class="nav-item-icon">📜</span>Certifications</button>
+      <button class="nav-item" data-sec="payment" onclick="showSection('payment')"><span class="nav-item-icon">💰</span>Payments</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="backend-status" style="margin-bottom:8px;padding:0 2px"></div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sb-avatar">R</div>
+        <div><div class="sidebar-user-name" id="sb-name">Farmer</div><div class="sidebar-user-role" id="sb-role">Farmer</div></div>
+        <button onclick="logout()" style="margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px" title="Logout">⎋</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <div id="wallet-badge"></div>
+        <button class="btn btn-sm btn-ghost" onclick="Blockchain.connect()">⬡ Connect Wallet</button>
+        <div class="icon-btn" title="Notifications"><span>🔔</span><div class="dot-notif"></div></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard" class="page sec-panel">
+      <div class="sec-head"><div class="sec-title">Welcome back, <span id="farmer-name" class="grad-text">Farmer</span></div><div class="sec-sub">Here's your supply chain overview for today</div></div>
+      <div class="stats-row stagger">
+        <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val grad-text" id="stat-total">—</div><div class="stat-lbl">Total Batches</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)" id="stat-approved">—</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--amber)" id="stat-pending">—</div><div class="stat-lbl">In Processing</div></div>
+        <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val" style="color:var(--red)" id="stat-recalled">—</div><div class="stat-lbl">Recalled</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Activity</div></div>
+          <div class="card-body" id="recent-activity"><span class="loader"></span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Quick Actions</div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn btn-primary btn-full" onclick="showSection('create')">🌱 Create New Batch</button>
+            <button class="btn btn-outline btn-full" onclick="showSection('history')">📋 View All Batches</button>
+            <button class="btn btn-ghost   btn-full" onclick="showSection('lab')">🧪 Check Lab Status</button>
+            <a href="verify.html" class="btn btn-ghost btn-full">🔍 Verify a Product</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE BATCH -->
+    <div id="sec-create" class="page sec-panel hidden">
+      <div class="sec-head"><div class="sec-title">Create New Batch</div><div class="sec-sub">Record your harvest on the blockchain</div></div>
+      <div class="grid-2" style="align-items:start">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🌱 Batch Details</div></div>
+          <div class="card-body">
+            <form id="batch-form" style="display:flex;flex-direction:column;gap:14px">
+              <div class="form-group">
+                <label class="form-label">Industry Type</label>
+                <select id="industryType" class="form-input">
+                  <option value="0">🌾 Agriculture & Food</option>
+                  <option value="1">💊 Pharmaceutical</option>
+                </select>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Product Name *</label>
+                  <input id="productName" class="form-input" placeholder="Organic Wheat" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Origin / Location *</label>
+                  <input id="origin" class="form-input" placeholder="Punjab, India" required>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Quantity *</label>
+                  <input id="quantity" class="form-input" type="number" placeholder="500" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Unit</label>
+                  <select id="unit" class="form-input"><option value="kg">kg</option><option value="tonnes">tonnes</option><option value="units">units</option><option value="litres">litres</option></select>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Harvest Date</label>
+                  <input id="harvestDate" class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Expiry Date</label>
+                  <input id="expiryDate" class="form-input" type="date">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Certificate Number (FSSAI/DCGI)</label>
+                <input id="certNumber" class="form-input" placeholder="FSSAI-2024-001">
+              </div>
+              <!-- Agriculture fields -->
+              <div class="form-group agri-field">
+                <label class="form-label">Pesticide Info</label>
+                <input id="pesticides" class="form-input" placeholder="None used / specify if any">
+              </div>
+              <!-- Pharma fields -->
+              <div class="form-group pharma-field hidden">
+                <label class="form-label">Dosage</label>
+                <input id="dosage" class="form-input" placeholder="e.g. 500mg">
+              </div>
+              <div class="form-group pharma-field hidden">
+                <label class="form-label">Manufacturing License</label>
+                <input id="license" class="form-input" placeholder="Mfg Lic No.">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea id="notes" class="form-input" placeholder="Additional details…"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full">🌱 Create Batch</button>
+            </form>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">📸 Product Photo</div></div>
+            <div class="card-body">
+              <div class="upload-zone" id="photo-upload-zone" title="Click or drag product photo here">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text">Click or drag to upload photo</div>
+                <div class="upload-sub">JPEG, PNG up to 20MB</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">📜 Certification Document</div></div>
+            <div class="card-body">
+              <div class="upload-zone" id="cert-upload-zone" title="Click or drag certification document here">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">Click or drag certificate</div>
+                <div class="upload-sub">PDF, images up to 20MB</div>
+              </div>
+            </div>
+          </div>
+          <!-- Success card -->
+          <div class="card hidden" id="batch-success" style="border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.05)">
+            <div class="card-pad">
+              <div style="color:var(--green);font-size:22px;margin-bottom:8px">✅ Batch Created!</div>
+              <div class="info-row"><span class="info-label">Batch ID</span><span class="info-val mono" id="created-id">—</span></div>
+              <div class="info-row"><span class="info-label">TX Hash</span><span class="info-val mono" id="created-tx">—</span></div>
+              <div class="info-row"><span class="info-label">IPFS Hash</span><span class="info-val mono" id="created-ipfs">—</span></div>
+              <div class="qr-wrap mt-12"><canvas id="created-qr"></canvas><div class="qr-id" id="created-qr-id">Scan to verify</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BATCH HISTORY -->
+    <div id="sec-history" class="page sec-panel hidden">
+      <div class="sec-head">
+        <div class="flex f-between f-center" style="flex-wrap:wrap;gap:12px">
+          <div><div class="sec-title">Batch History</div><div class="sec-sub">All your recorded batches</div></div>
+          <div class="flex gap-8"><input id="search-batches" class="form-input" style="width:220px" placeholder="Search…" oninput="filterBatches(this.value)"><button class="btn btn-primary btn-sm" onclick="loadBatches()">↺ Refresh</button></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Batch ID</th><th>Product</th><th>Origin</th><th>Harvest</th><th>Quantity</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="batch-tbody"><tr><td colspan="7" style="text-align:center;padding:22px;color:var(--dim)"><span class="loader"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAB STATUS -->
+    <div id="sec-lab" class="page sec-panel hidden">
+      <div class="sec-head"><div class="sec-title">Lab Status</div><div class="sec-sub">Track testing progress for your batches</div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Active Batches in Testing</div><button class="btn btn-sm btn-ghost" onclick="loadLabStatus()">↺ Refresh</button></div>
+        <div class="card-body" id="lab-status-list"><span class="loader"></span></div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div id="sec-certs" class="page sec-panel hidden">
+      <div class="sec-head"><div class="sec-title">Certifications</div><div class="sec-sub">Manage your farm certifications</div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Upload Certificate</div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-group"><label class="form-label">Certificate Name</label><input class="form-input" placeholder="FSSAI License 2024"></div>
+            <div class="form-group"><label class="form-label">Certificate Number</label><input class="form-input" placeholder="FSSAI-12345678901234"></div>
+            <div class="form-group"><label class="form-label">Expiry Date</label><input class="form-input" type="date"></div>
+            <div class="upload-zone" id="cert-up2" title="Click or drag certificate file here">
+              <div class="upload-icon">📜</div>
+              <div class="upload-text">Upload certificate file</div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="showToast('Certificate upload coming soon!','info')">📜 Save Certificate</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Existing Certifications</div></div>
+          <div class="card-body">
+            <div class="timeline">
+              <div class="tl-item"><div class="tl-time">Jan 15, 2024</div><div class="tl-title">FSSAI License</div><div class="tl-desc">FSSAI-12345678901234 · Expires Dec 2025</div></div>
+              <div class="tl-item"><div class="tl-time">Mar 01, 2024</div><div class="tl-title">Organic India Cert</div><div class="tl-desc">OI-2024-00456 · Valid</div></div>
+              <div class="tl-item"><div class="tl-time">Apr 20, 2024</div><div class="tl-title">APEDA Export Cert</div><div class="tl-desc">APE-2024-789 · Valid for exports</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div id="sec-payment" class="page sec-panel hidden">
+      <div class="sec-head"><div class="sec-title">Payments</div><div class="sec-sub">Track your earnings and settlements</div></div>
+      <div class="grid-2">
+        <div class="pay-card"><div class="text-xs text-muted">Pending Payout</div><div class="pay-amount">₹84,500</div><div class="pay-sub">3 batches approved, awaiting settlement</div></div>
+        <div class="pay-card" style="background:linear-gradient(135deg,rgba(0,180,255,.08),rgba(168,85,247,.06));border-color:rgba(0,180,255,.2)"><div class="text-xs text-muted">Paid This Month</div><div class="pay-amount" style="color:var(--blue)">₹2,36,000</div><div class="pay-sub">8 batches · June 2024</div></div>
+      </div>
+      <div class="card mt-20">
+        <div class="card-header"><div class="card-title">Payment History</div></div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Batch ID</th><th>Product</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">BATCH-AGRI-001</td><td>Organic Wheat</td><td>₹65,000</td><td>Jun 12, 2024</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="mono">BATCH-AGRI-002</td><td>Basmati Rice</td><td>₹1,20,000</td><td>Jun 08, 2024</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="mono">BATCH-AGRI-003</td><td>Alphonso Mangoes</td><td>₹51,000</td><td>Jun 01, 2024</td><td><span class="badge badge-green">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Batch Detail Modal -->
+<div class="modal-bg" id="batch-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modal-title">Batch Details</div><div class="modal-close" onclick="closeModal('batch-modal')">✕</div></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot"><button class="btn btn-ghost btn-sm" onclick="closeModal('batch-modal')">Close</button></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/blockchain.js"></script>
+<script src="js/farmer.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const n=document.getElementById("farmer-name"); if(n) n.textContent=getUserName();
+});
+function filterBatches(q){
+  document.querySelectorAll("#batch-tbody tr").forEach(r=>{
+    r.style.display=q?r.textContent.toLowerCase().includes(q.toLowerCase())?"":"none":"";
+  });
+}
+</script>
+</body>
+</html>

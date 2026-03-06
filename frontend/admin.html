@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard — ProvenanceChain</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1" style="background:var(--red)"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" style="background:linear-gradient(135deg,#ef4444,#f59e0b)">🛡</div>
+      <div><div class="sidebar-brand">ProvenanceChain</div><div class="sidebar-brand-sub">Admin Control Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <button class="nav-item active" data-sec="analytics" onclick="showSection('analytics');loadAnalytics()"><span class="nav-item-icon">📊</span>Analytics</button>
+      <button class="nav-item" data-sec="batches" onclick="showSection('batches');loadAllBatches()"><span class="nav-item-icon">📦</span>All Batches</button>
+      <div class="nav-section-label">Management</div>
+      <button class="nav-item" data-sec="users" onclick="showSection('users');loadUsers()"><span class="nav-item-icon">👥</span>Users<span class="nav-badge" id="users-badge">0</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="backend-status" style="margin-bottom:8px;padding:0 2px"></div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sb-avatar" style="background:linear-gradient(135deg,#ef4444,#f59e0b)">A</div>
+        <div><div class="sidebar-user-name" id="sb-name">Admin</div><div class="sidebar-user-role" id="sb-role">Admin</div></div>
+        <button onclick="logout()" style="margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px" title="Logout">⎋</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Analytics</div>
+      <div class="topbar-right">
+        <div id="wallet-badge"></div>
+        <button class="btn btn-sm btn-ghost" onclick="Blockchain.connect()">⬡ Connect Wallet</button>
+        <button class="btn btn-sm btn-primary" onclick="seedDemo()">🌱 Seed Demo Data</button>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="sec-analytics" class="page sec-panel" id="analytics-content">
+      <div class="sec-head"><div class="sec-title">Platform Analytics</div><div class="sec-sub">Real-time supply chain metrics</div></div>
+
+      <!-- Primary stats -->
+      <div class="stats-row stagger">
+        <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val grad-text" id="a-total">—</div><div class="stat-lbl">Total Batches</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)" id="a-approved">—</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val" style="color:var(--red)" id="a-recalled">—</div><div class="stat-lbl">Recalled</div></div>
+        <div class="stat-card"><div class="stat-icon">🧪</div><div class="stat-val" style="color:var(--purple)" id="a-pending">—</div><div class="stat-lbl">Lab Pending</div></div>
+        <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" style="color:var(--amber)" id="a-rate">—</div><div class="stat-lbl">Approval Rate</div></div>
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val" style="color:var(--blue)" id="a-users">—</div><div class="stat-lbl">Total Users</div></div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Platform charts -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Platform Distribution</div></div>
+          <div class="card-body">
+            <div class="bar-row"><div class="bar-label">Agriculture</div><div class="bar-track"><div class="bar-fill" id="bar-agri" style="width:0%"></div></div><div class="bar-val" id="bar-agri-v">0%</div></div>
+            <div class="bar-row"><div class="bar-label">Pharma</div><div class="bar-track"><div class="bar-fill" id="bar-pharma" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--blue))"></div></div><div class="bar-val" id="bar-pharma-v">0%</div></div>
+            <div class="bar-row"><div class="bar-label">Approval %</div><div class="bar-track"><div class="bar-fill" id="bar-rate" style="width:0%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div><div class="bar-val" id="bar-rate-v">0%</div></div>
+            <div class="bar-row"><div class="bar-label">Suspicious</div><div class="bar-track"><div class="bar-fill" id="bar-suspicious" style="width:0%;background:linear-gradient(90deg,var(--amber),var(--red))"></div></div><div class="bar-val" id="a-suspicious">0</div></div>
+          </div>
+        </div>
+
+        <!-- Region map -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Regional Distribution</div><button class="btn btn-sm btn-ghost" onclick="loadAnalytics()">↺</button></div>
+          <div class="card-body" id="region-list">
+            <div style="color:var(--dim);text-align:center;padding:20px">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary stats -->
+      <div class="stats-row stagger mt-20" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+        <div class="stat-card"><div class="stat-icon">🚚</div><div class="stat-val grad-text" id="a-delivered">—</div><div class="stat-lbl">Delivered</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)" id="a-active">—</div><div class="stat-lbl">Active Users</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--amber)" id="a-pending-u">—</div><div class="stat-lbl">Pending Users</div></div>
+        <div class="stat-card"><div class="stat-icon">🔍</div><div class="stat-val" style="color:var(--red)" id="a-suspicious">—</div><div class="stat-lbl">Suspicious Scans</div></div>
+      </div>
+    </div>
+
+    <!-- ALL BATCHES -->
+    <div id="sec-batches" class="page sec-panel hidden">
+      <div class="sec-head">
+        <div class="flex f-between f-center" style="flex-wrap:wrap;gap:12px">
+          <div><div class="sec-title">All Batches</div><div class="sec-sub">Complete platform batch inventory</div></div>
+          <div class="flex gap-8">
+            <input class="form-input" style="width:200px" placeholder="Search…" oninput="filterTable(this.value,'admin-batch-tbody')">
+            <button class="btn btn-sm btn-ghost" onclick="loadAllBatches()">↺ Refresh</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Batch ID</th><th>Product</th><th>Farmer</th><th>Origin</th><th>Industry</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="admin-batch-tbody"><tr><td colspan="8" style="text-align:center;padding:22px;color:var(--dim)"><span class="loader"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USER MANAGEMENT -->
+    <div id="sec-users" class="page sec-panel hidden">
+      <div class="sec-head">
+        <div class="flex f-between f-center" style="flex-wrap:wrap;gap:12px">
+          <div><div class="sec-title">User Management</div><div class="sec-sub">Approve, suspend and manage platform users</div></div>
+          <div class="flex gap-8">
+            <select id="user-filter" class="form-input" style="width:130px" onchange="loadUsers()">
+              <option value="all">All (<span id="u-count-all">0</span>)</option>
+              <option value="pending">Pending</option>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <button class="btn btn-sm btn-ghost" onclick="loadUsers()">↺ Refresh</button>
+          </div>
+        </div>
+      </div>
+      <!-- Status summary -->
+      <div class="stats-row mb-20" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card" style="cursor:pointer" onclick="document.getElementById('user-filter').value='all';loadUsers()"><div class="stat-val grad-text" id="u-count-all">0</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-card" style="cursor:pointer;border-top-color:var(--amber)" onclick="document.getElementById('user-filter').value='pending';loadUsers()"><div class="stat-val" style="color:var(--amber)" id="u-count-pending">0</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-card" style="cursor:pointer;border-top-color:var(--green)" onclick="document.getElementById('user-filter').value='active';loadUsers()"><div class="stat-val" style="color:var(--green)" id="u-count-active">0</div><div class="stat-lbl">Active</div></div>
+        <div class="stat-card" style="cursor:pointer;border-top-color:var(--red)" onclick="document.getElementById('user-filter').value='suspended';loadUsers()"><div class="stat-val" style="color:var(--red)" id="u-count-suspended">0</div><div class="stat-lbl">Suspended</div></div>
+      </div>
+      <div class="card">
+        <div id="users-list"><span class="loader" style="display:block;margin:24px auto;width:24px;height:24px"></span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="batch-modal">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-head"><div class="modal-title" id="modal-title">Batch Details</div><div class="modal-close" onclick="closeModal('batch-modal')">✕</div></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot"><button class="btn btn-ghost btn-sm" onclick="closeModal('batch-modal')">Close</button></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/blockchain.js"></script>
+<script src="js/admin.js"></script>
+<script>
+function filterTable(q,tbodyId){
+  document.querySelectorAll("#"+tbodyId+" tr").forEach(r=>{
+    r.style.display=q?r.textContent.toLowerCase().includes(q.toLowerCase())?"":"none":"";
+  });
+}
+</script>
+</body>
+</html>

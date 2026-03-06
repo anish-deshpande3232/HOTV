@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lab Dashboard — ProvenanceChain</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1" style="background:var(--purple)"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" style="background:linear-gradient(135deg,var(--purple),var(--blue))">🧪</div>
+      <div><div class="sidebar-brand">ProvenanceChain</div><div class="sidebar-brand-sub">Lab Portal</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item active" data-sec="dashboard" onclick="showSection('dashboard')"><span class="nav-item-icon">📊</span>Dashboard</button>
+      <button class="nav-item" data-sec="pending" onclick="showSection('pending');loadPendingBatches()"><span class="nav-item-icon">⏳</span>Pending Tests<span class="nav-badge" id="pending-badge">0</span></button>
+      <button class="nav-item" data-sec="upload" onclick="showSection('upload')"><span class="nav-item-icon">📋</span>Upload Report</button>
+      <button class="nav-item" data-sec="completed" onclick="showSection('completed');loadCompletedTests()"><span class="nav-item-icon">✅</span>Test History</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="backend-status" style="margin-bottom:8px;padding:0 2px"></div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sb-avatar" style="background:linear-gradient(135deg,var(--purple),var(--blue))">L</div>
+        <div><div class="sidebar-user-name" id="sb-name">Lab</div><div class="sidebar-user-role" id="sb-role">Lab</div></div>
+        <button onclick="logout()" style="margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px" title="Logout">⎋</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <div id="wallet-badge"></div>
+        <button class="btn btn-sm btn-ghost" onclick="Blockchain.connect()">⬡ Connect Wallet</button>
+        <div class="icon-btn"><span>🔔</span><div class="dot-notif"></div></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard" class="page sec-panel">
+      <div class="sec-head"><div class="sec-title">Lab Dashboard</div><div class="sec-sub">Quality testing and verification centre</div></div>
+      <div class="stats-row stagger">
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--amber)" id="stat-pending">—</div><div class="stat-lbl">Pending Tests</div></div>
+        <div class="stat-card"><div class="stat-icon">🔬</div><div class="stat-val" style="color:var(--purple)" id="stat-verified">—</div><div class="stat-lbl">Verified</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)" id="stat-approved">—</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val grad-text" id="stat-total">—</div><div class="stat-lbl">Total Tested</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Next Pending Test</div></div>
+          <div class="card-body" id="next-test-preview">
+            <div style="color:var(--dim);text-align:center;padding:20px">Loading…</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Quick Actions</div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn btn-primary btn-full" onclick="showSection('pending');loadPendingBatches()">⏳ View Pending Tests</button>
+            <button class="btn btn-outline btn-full" onclick="showSection('upload')">📋 Upload Report</button>
+            <button class="btn btn-ghost btn-full"   onclick="showSection('completed');loadCompletedTests()">✅ Test History</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENDING TESTS -->
+    <div id="sec-pending" class="page sec-panel hidden">
+      <div class="sec-head">
+        <div class="flex f-between f-center" style="flex-wrap:wrap;gap:12px">
+          <div><div class="sec-title">Pending Tests</div><div class="sec-sub">Batches awaiting laboratory verification</div></div>
+          <button class="btn btn-sm btn-ghost" onclick="loadPendingBatches()">↺ Refresh</button>
+        </div>
+      </div>
+      <div id="pending-list"><span class="loader"></span></div>
+    </div>
+
+    <!-- UPLOAD REPORT -->
+    <div id="sec-upload" class="page sec-panel hidden">
+      <div class="sec-head"><div class="sec-title">Upload Lab Report</div><div class="sec-sub">Submit test results with digital signature</div></div>
+      <div class="grid-2" style="align-items:start">
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔬 Test Report</div></div>
+          <div class="card-body">
+            <div class="alert alert-info mb-16"><span class="alert-icon">ℹ️</span><span class="alert-text">Testing batch: <strong id="lab-batch-name">Select a batch from Pending Tests</strong></span></div>
+            <form id="report-form" style="display:flex;flex-direction:column;gap:14px">
+              <input type="hidden" id="lab-batch-id">
+              <div class="form-group">
+                <label class="form-label">Test Result *</label>
+                <select id="test-result" class="form-input">
+                  <option value="">— Select Result —</option>
+                  <option value="Approved">✅ Approved — Passed all tests</option>
+                  <option value="Rejected">❌ Rejected — Failed testing</option>
+                </select>
+              </div>
+              <!-- Agriculture fields -->
+              <div class="form-grid lab-agri-field">
+                <div class="form-group">
+                  <label class="form-label">Moisture Content</label>
+                  <input id="moisture" class="form-input" placeholder="e.g. 12.5%">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Pesticide Level</label>
+                  <input id="pesticide" class="form-input" placeholder="e.g. BDL / 0.02 mg/kg">
+                </div>
+              </div>
+              <div class="form-group lab-agri-field">
+                <label class="form-label">Heavy Metals</label>
+                <input id="heavy-metals" class="form-input" placeholder="e.g. BDL (Below Detection Limit)">
+              </div>
+              <!-- Pharma fields -->
+              <div class="form-grid lab-pharma-field hidden">
+                <div class="form-group">
+                  <label class="form-label">Potency / Assay</label>
+                  <input id="potency" class="form-input" placeholder="e.g. 98.5%">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Dissolution Rate</label>
+                  <input id="dissolution" class="form-input" placeholder="e.g. 95% in 30 min">
+                </div>
+              </div>
+              <div class="form-group lab-pharma-field hidden">
+                <label class="form-label">Sterility Test</label>
+                <input id="sterility" class="form-input" placeholder="Pass / Fail">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lab Notes</label>
+                <textarea id="lab-notes" class="form-input" rows="3" placeholder="Detailed observations…"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Attach Report File</label>
+                <div class="upload-zone" id="lab-file-zone" title="Click or drag lab report here">
+                  <div class="upload-icon">📄</div>
+                  <div class="upload-text">Click to attach report PDF</div>
+                  <div class="upload-sub">PDF, images up to 20MB</div>
+                </div>
+              </div>
+              <div id="sig-display" class="hidden">
+                <div class="form-label mb-8">Digital Signature</div>
+                <div class="sig-box" id="sig-value">—</div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full">🔬 Submit Report</button>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Testing Guidelines</div></div>
+          <div class="card-body">
+            <div class="timeline">
+              <div class="tl-item"><div class="tl-title">Agriculture & Food</div><div class="tl-desc">Moisture content, pesticide residue levels, heavy metal testing, microbial contamination check</div></div>
+              <div class="tl-item"><div class="tl-title">Pharmaceuticals</div><div class="tl-desc">Potency/assay, dissolution rate, sterility, impurity testing, stability studies per DCGI guidelines</div></div>
+              <div class="tl-item"><div class="tl-title">Digital Signature</div><div class="tl-desc">Reports are cryptographically signed by your wallet. Connect MetaMask to use on-chain signing.</div></div>
+              <div class="tl-item"><div class="tl-title">IPFS Upload</div><div class="tl-desc">Reports are pinned to IPFS before the hash is recorded on-chain for permanent verification.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLETED TESTS -->
+    <div id="sec-completed" class="page sec-panel hidden">
+      <div class="sec-head">
+        <div class="flex f-between f-center" style="flex-wrap:wrap;gap:12px">
+          <div><div class="sec-title">Test History</div><div class="sec-sub">All completed lab verifications</div></div>
+          <div class="flex gap-8"><input class="form-input" style="width:200px" placeholder="Search…" oninput="filterTable(this.value,'completed-tbody')"><button class="btn btn-sm btn-ghost" onclick="loadCompletedTests()">↺ Refresh</button></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Batch ID</th><th>Product</th><th>Industry</th><th>Test Date</th><th>Result</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="completed-tbody"><tr><td colspan="7" style="text-align:center;padding:22px;color:var(--dim)"><span class="loader"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="batch-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modal-title">Batch Details</div><div class="modal-close" onclick="closeModal('batch-modal')">✕</div></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot"><button class="btn btn-ghost btn-sm" onclick="closeModal('batch-modal')">Close</button></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/blockchain.js"></script>
+<script src="js/lab.js"></script>
+<script>
+function filterTable(q,tbodyId){
+  document.querySelectorAll("#"+tbodyId+" tr").forEach(r=>{
+    r.style.display=q?r.textContent.toLowerCase().includes(q.toLowerCase())?"":"none":"";
+  });
+}
+// Load next test preview on dashboard
+async function loadNextPreview() {
+  try {
+    const { batches=[] } = await API.getAllBatches();
+    const next = batches.find(b=>b.status>=1&&b.status<=2);
+    const el = document.getElementById("next-test-preview");
+    if (!el) return;
+    if (next) {
+      el.innerHTML = `
+        <div class="fw-700 text-sm mb-8">${next.productName}</div>
+        <div class="text-xs text-muted mb-12">${next.producerName} · ${next.origin}</div>
+        ${statusBadge(next.statusLabel||"In Transit")}
+        <button class="btn btn-primary btn-full mt-16" onclick="openTestForm('${next.displayId||next.batchId}','${next.productName}',${next.industryType||0});showSection('upload')">
+          Start Testing →
+        </button>`;
+    } else {
+      el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--dim)">🎉 No pending tests</div>`;
+    }
+  } catch {}
+}
+document.addEventListener("DOMContentLoaded", loadNextPreview);
+</script>
+</body>
+</html>
